@@ -1,7 +1,5 @@
 package com.example.app;
 
-import com.example.app.service.impl.LogServiceImpl;
-
 /**
  * @author MarkHuang
  * @version <ul>

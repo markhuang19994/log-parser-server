@@ -1,6 +1,5 @@
 package com.example.app;
 
-import com.example.app.MainArgs;
 import com.example.app.analysis.ActionAnalysis;
 
 import java.io.IOException;

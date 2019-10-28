@@ -35,6 +35,7 @@ public class InstructHandler {
         //todo change content method
         //todo cache origin log detail
         //todo logback
+        //todo use reflection instead of compile new class
         String data = request.getParameter("data");
         String[] args = argumentService.parseArgumentStr(data);
         logService.generateLogByConditionMethod(args);

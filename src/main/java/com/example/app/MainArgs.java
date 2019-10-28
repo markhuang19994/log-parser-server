@@ -6,7 +6,6 @@ import org.springframework.core.io.ClassPathResource;
 import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 /**
  * @author MarkHuang* @version

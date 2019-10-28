@@ -1,13 +1,11 @@
 package com.example.app.handler;
 
 import com.example.app.service.MainService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 /**
  * @author MarkHuang
@@ -19,8 +17,11 @@ import java.io.IOException;
 @RestController
 public class BaseHandler {
 
-    @Autowired
-    private MainService mainService;
+    private final MainService mainService;
+
+    public BaseHandler(MainService mainService) {
+        this.mainService = mainService;
+    }
 
     @GetMapping("/hello")
     public String hello() {

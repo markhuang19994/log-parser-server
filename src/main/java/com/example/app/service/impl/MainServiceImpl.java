@@ -5,13 +5,11 @@ import com.example.app.MainArgsParser;
 import com.example.app.service.MainService;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -24,13 +22,14 @@ import java.util.Properties;
 @Service
 public class MainServiceImpl implements MainService {
 
-    @Autowired
-    private ApplicationContext ctx;
-
-    @Autowired
-    private LogServiceImpl logService;
-
+    private final ApplicationContext ctx;
+    private final LogServiceImpl logService;
     private ObjectMapper om = new ObjectMapper();
+
+    public MainServiceImpl(ApplicationContext ctx, LogServiceImpl logService) {
+        this.ctx = ctx;
+        this.logService = logService;
+    }
 
     @Override
     public String init(String mainConfigPath) throws Exception {

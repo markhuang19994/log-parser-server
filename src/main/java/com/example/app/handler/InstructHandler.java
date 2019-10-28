@@ -3,13 +3,11 @@ package com.example.app.handler;
 import com.example.app.handler.annon.IgnoreException;
 import com.example.app.service.ArgumentService;
 import com.example.app.service.impl.LogServiceImpl;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @author MarkHuang
@@ -36,6 +34,7 @@ public class InstructHandler {
         //todo group by method
         //todo change content method
         //todo cache origin log detail
+        //todo logback
         String data = request.getParameter("data");
         String[] args = argumentService.parseArgumentStr(data);
         logService.generateLogByConditionMethod(args);

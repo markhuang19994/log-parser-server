@@ -35,7 +35,7 @@ public class LogHistoryServiceImpl implements LogHistoryService {
     @Override
     public void writeHistory(List<LogDetail> logDetails) throws IOException {
         File historyFile = new File(historyDir, "log_detail_" + historyCount.getAndAdd(1) + ".h.gz");
-        try (GZIPOutputStream gos = new GZIPOutputStream(new FileOutputStream(historyFile));) {
+        try (GZIPOutputStream gos = new GZIPOutputStream(new FileOutputStream(historyFile))) {
             String logDetailsStr = om.writeValueAsString(logDetails);
             gos.write(logDetailsStr.getBytes());
             gos.flush();

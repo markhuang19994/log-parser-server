@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
+history_dir="${HOME}/lvadmin/history"
+state='default'
+mkdir -p ~/lvadmin/history
+
 trap "killall background" EXIT
+trap save_state_history EXIT
 
 main() {
   BASE_URL=${1:-http://localhost:17778}
@@ -20,40 +25,62 @@ function start_server() {
 }
 
 function setMainArgs() {
-  read -rp 'Main config path:' main_config_path
+  config_his="${HOME}/lvadmin/history/.lvadmin_config_his"
+  history -r "$config_his"
+  read -erp 'Main config path:' main_config_path
+  history -s "$main_config_path"
+  history -w "$config_his"
   send_post "${BASE_URL}/set/main_args" "${main_config_path}"
 }
 
 function execInstruct() {
-  state=''
-  while IFS= read -erp "lvadmin@${state}>> " args_arr; do
-    history -s "$args_arr"
+  history -c
+  history -r "${history_dir}/.lvadmin_state_${state}_his"
+
+  # shellcheck disable=SC2006
+  while true; do
+    IFS= read -erp "lvadmin@${state}>> " args_arr
     if [[ "${args_arr}" == exit ]]; then
       exit 0
     elif [[ "${args_arr}" == method ]]; then
-      state='method'
+      change_state "${state}" 'method'
     elif [[ "${args_arr}" == life ]]; then
-      state='life'
+      change_state "${state}" 'life'
     else
-#       shellcheck disable=SC2086
-#      arg_arr_str="$(arg_str_to_array_str ${args_arr})"
+      history -s "$args_arr"
       send_post "${BASE_URL}/exec/instruct/${state}" "${args_arr}"
     fi
   done
 }
 
+function change_state() {
+  old_state="$1"
+  new_state="$2"
+  change_state_history "${old_state}" "$new_state"
+  state="$new_state"
+}
+
+function change_state_history() {
+  old_state="$1"
+  new_state="$2"
+  history -w "${history_dir}/.lvadmin_state_${old_state}_his"
+  history -c
+  history -r "${history_dir}/.lvadmin_state_${new_state}_his"
+}
+
+function save_state_history() {
+  history -w "${history_dir}/.lvadmin_state_${state}_his"
+}
+
 function send_post() {
   url=$1
   data=$2
-  #Send post request to server
-  #  http_detail=$(curl --fail -i -v --request POST -sL \
-  #    --url "${url}" \
-  #    --data-urlencode "data=${data}" 2>&1)
 
   curl --fail --request POST -sL \
     --url "${url}" \
     --data-urlencode "data=${data}"
   exitCode=$?
+
   #After curl send post request
   if [[ "${exitCode}" -ne 0 ]]; then
     printf "\nCurl error, Code: %s\n" "${exitCode}"

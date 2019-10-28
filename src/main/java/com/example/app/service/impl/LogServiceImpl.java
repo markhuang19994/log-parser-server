@@ -116,8 +116,12 @@ public class LogServiceImpl implements LogService {
             if (arg.equals("|")) {
                 instructList.add(new MethodInstruct(instructParts));
                 instructParts = new ArrayList<>();
+                continue;
             }
             instructParts.add(arg);
+        }
+        if (instructParts.size() > 0) {
+            instructList.add(new MethodInstruct(instructParts));
         }
         return instructList;
     }

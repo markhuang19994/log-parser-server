@@ -33,8 +33,6 @@ public class InstructHandler {
 
     @PostMapping("/exec/instruct/method")
     public String method(HttpServletRequest request) throws Exception {
-        //todo string arg parser
-        //todo eq sessionId 123 | ct requestPath /asd, pipeline feature
         //todo group by method
         //todo change content method
         String data = request.getParameter("data");

@@ -22,7 +22,7 @@ public class ArgumentServiceImpl implements ArgumentService {
         boolean escape = false;
         boolean inSq = false;
         boolean inDq = false;
-        boolean onChVal = false;
+        boolean onChVal = true;
         StringBuilder temp = new StringBuilder();
         for (char c : chars) {
             if (c == '\\') {

@@ -35,6 +35,7 @@ public class InstructHandler {
     public String method(HttpServletRequest request) throws Exception {
         //todo group by method
         //todo change content method
+        //todo cache origin log detail
         String data = request.getParameter("data");
         String[] args = argumentService.parseArgumentStr(data);
         logService.generateLogByConditionMethod(args);
@@ -44,10 +45,9 @@ public class InstructHandler {
     @PostMapping("/exec/instruct/life")
     public String life(HttpServletRequest request) throws Exception {
         String data = request.getParameter("data");
-        List<String> list = om.readValue(data, new TypeReference<List<String>>() {
-        });
-        if (list.get(0).equals("his")) {
-            logService.recoverHistory(Integer.parseInt(list.get(1)));
+        String[] args = argumentService.parseArgumentStr(data);
+        if ("his".equals(args[0]) || "history".equals(args[0])) {
+            logService.recoverHistory(Integer.parseInt(args[1]));
         }
         return "";
     }

@@ -43,7 +43,7 @@ public class LogServiceImpl implements LogService {
     @Override
     public void init() throws Exception {
         String log = FileUtil.readFileAsString(mainArgs.getLogFile());
-        ParseLogService parseLogService = new ParseLogService(log, mainArgs.getLogStructure());
+        ParseLogService parseLogService = ParseLogServiceImpl.newInstance(log, mainArgs.getLogStructure());
         this.currentLogDetails = parseLogService.parseLog();
         logHistoryService.writeHistory(this.currentLogDetails);
     }

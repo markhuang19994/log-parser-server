@@ -66,8 +66,14 @@ public class MainServiceImpl implements MainService {
         mainArgsBean.setConditionJavaSource(mainArgs.getConditionJavaSource());
 
         runMain(mainArgs);
-        return String.format("Set main config:\n%s",
-                om.setDefaultPrettyPrinter(new DefaultPrettyPrinter()).writeValueAsString(mainArgsBean));
+        return String.format(
+                "LogFile:%s\nLogStructure:%s\nResultLogStructure:%s\nConditionFile:%s\nOutFile:%s",
+                mainArgsBean.getLogFile().getAbsolutePath(),
+                mainArgsBean.getLogStructure(),
+                mainArgsBean.getResultLogStructure(),
+                logCondition,
+                mainArgsBean.getOutFile().getAbsolutePath()
+        );
     }
 
     @Override

@@ -3,15 +3,19 @@ package com.example.app.service.impl;
 import com.example.app.MainArgs;
 import com.example.app.condition.LogCondition;
 import com.example.app.model.LogDetail;
+import com.example.app.service.ArgumentService;
 import com.example.app.service.LogConditionService;
 import com.example.app.service.MethodInstructService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author MarkHuang
@@ -26,6 +30,8 @@ public class MethodInstructServiceImpl implements MethodInstructService {
 
     private final MainArgs mainArgs;
     private final LogConditionService conditionService;
+    @Autowired
+    private ArgumentService argumentService;
 
 
     public MethodInstructServiceImpl(LogConditionService conditionService, MainArgs mainArgs) {
@@ -64,20 +70,10 @@ public class MethodInstructServiceImpl implements MethodInstructService {
     }
 
     private List<MethodInstruct> parseMethodExecInstruct(String[] args) {
-        List<MethodInstruct> instructList = new ArrayList<>();
-        List<String> instructParts = new ArrayList<>();
-        for (String arg : args) {
-            if (arg.equals("|")) {
-                instructList.add(new MethodInstruct(instructParts));
-                instructParts = new ArrayList<>();
-                continue;
-            }
-            instructParts.add(arg);
-        }
-        if (instructParts.size() > 0) {
-            instructList.add(new MethodInstruct(instructParts));
-        }
-        return instructList;
+        return argumentService.splitArgs(args, "|")
+                .stream()
+                .map(_args -> new MethodInstruct(Arrays.asList(_args)))
+                .collect(Collectors.toList());
     }
 
     private static class MethodInstruct {
@@ -88,7 +84,6 @@ public class MethodInstructServiceImpl implements MethodInstructService {
         }
 
         private String getMethodStr() {
-
             StringBuilder method = new StringBuilder(parts.get(0) + "(");
             for (int i = 1; i < parts.size(); i++) {
                 method.append(String.format("\"%s\"", parts.get(i)));

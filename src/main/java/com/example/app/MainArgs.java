@@ -37,7 +37,7 @@ public class MainArgs {
         this.logFile = logFile;
         this.logStructure = logStructure;
         this.resultLogStructure = resultLogStructure == null ? logStructure : resultLogStructure;
-        this.oriResultLogStructure = resultLogStructure;
+        this.oriResultLogStructure = this.resultLogStructure;
         File conditionJavaFile = new File(conditionJavaPath);
 
         if (!conditionJavaFile.exists()) {
@@ -118,6 +118,14 @@ public class MainArgs {
 
     public boolean isPretty() {
         return isPretty;
+    }
+
+    public void setOriResultLogStructure(String oriResultLogStructure) {
+        this.oriResultLogStructure = oriResultLogStructure;
+    }
+
+    public String getOriResultLogStructure() {
+        return oriResultLogStructure;
     }
 
     public String resetResultLogStructure() {

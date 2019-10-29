@@ -64,8 +64,9 @@ public class MainServiceImpl implements MainService {
         mainArgsBean.setResultLogStructure(mainArgs.getResultLogStructure());
         mainArgsBean.setConditionJavaSource(mainArgs.getConditionJavaSource());
         mainArgsBean.setContentChangeJavaSource(mainArgs.getContentChangeJavaSource());
+        mainArgsBean.setOriResultLogStructure(mainArgs.getOriResultLogStructure());
 
-        runMain(mainArgs);
+        runMain(mainArgsBean);
         return String.format(
                 "LogFile:%s\nLogStructure:%s\nResultLogStructure:%s\nConditionFile:%s\nContentChangeFile:%s\nOutFile:%s",
                 mainArgsBean.getLogFile().getAbsolutePath(),

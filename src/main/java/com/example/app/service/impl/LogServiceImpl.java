@@ -124,7 +124,7 @@ public class LogServiceImpl implements LogService {
                 messages.add(String.format("Set pretty:%s", pretty));
             }
             if (arg0.matches("^s|structure$")) {
-                String structure = String.valueOf(pipeArgs[1]);
+                String structure = pipeArgs[1];
                 mainArgs.setResultLogStructure(structure);
                 messages.add(String.format("Set result structure:%s", structure));
             }

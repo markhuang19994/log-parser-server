@@ -32,7 +32,6 @@ public class InstructHandler {
     public String method(HttpServletRequest request) throws Exception {
         //todo group by method
         //todo change content method
-        //todo cache origin log detail
         //todo logback
         //todo use reflection instead of compile new class
         String data = request.getParameter("data");

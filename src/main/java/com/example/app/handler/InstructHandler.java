@@ -3,7 +3,6 @@ package com.example.app.handler;
 import com.example.app.handler.annon.IgnoreException;
 import com.example.app.service.ArgumentService;
 import com.example.app.service.LogService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,15 +27,22 @@ public class InstructHandler {
         this.argumentService = argumentService;
     }
 
-    @PostMapping("/exec/instruct/method")
-    public String method(HttpServletRequest request) throws Exception {
+    @PostMapping("/exec/instruct/fmethod")
+    public String fmethod(HttpServletRequest request) throws Exception {
         //todo group by method
         //todo change content method
-        //todo logback
         //todo use reflection instead of compile new class
         String data = request.getParameter("data");
         String[] args = argumentService.parseArgumentStr(data);
-        logService.generateLogByConditionMethod(args);
+        logService.generateLogByFilterMethod(args);
+        return "";
+    }
+
+    @PostMapping("/exec/instruct/cmethod")
+    public String cmethod(HttpServletRequest request) throws Exception {
+        String data = request.getParameter("data");
+        String[] args = argumentService.parseArgumentStr(data);
+        logService.generateLogByChangeContentMethod(args);
         return "";
     }
 

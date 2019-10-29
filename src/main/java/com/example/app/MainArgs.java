@@ -20,6 +20,7 @@ public class MainArgs {
     private String resultLogStructure;
     private String oriResultLogStructure;
     private String conditionJavaSource;
+    private String contentChangeJavaSource;
     private File outFile;
     private boolean isPretty = false;
 
@@ -27,7 +28,8 @@ public class MainArgs {
     }
 
     public MainArgs(@NotNull String log, String logStructure,
-                    String resultLogStructure, String conditionJavaPath, String out) throws IOException {
+                    String resultLogStructure, String conditionJavaPath,
+                    String contentChangeJavaPath, String out) throws IOException {
         File logFile = new File(log);
         if (!logFile.exists()) {
             throw new RuntimeException("Log file not found at:" + log);
@@ -37,10 +39,18 @@ public class MainArgs {
         this.resultLogStructure = resultLogStructure == null ? logStructure : resultLogStructure;
         this.oriResultLogStructure = resultLogStructure;
         File conditionJavaFile = new File(conditionJavaPath);
+
         if (!conditionJavaFile.exists()) {
-            this.conditionJavaSource = FileUtil.readFileAsString(new ClassPathResource("condition/LogConditionDemo.java").getFile());
+            this.conditionJavaSource = FileUtil.readFileAsString(new ClassPathResource("method/condition/LogConditionDemo.java").getFile());
         } else {
             this.conditionJavaSource = FileUtil.readFileAsString(conditionJavaFile);
+        }
+
+        File contentChangeJavaFile = new File(contentChangeJavaPath);
+        if (!contentChangeJavaFile.exists()) {
+            this.contentChangeJavaSource = FileUtil.readFileAsString(new ClassPathResource("method/content/LogContentChangerDemo.java").getFile());
+        } else {
+            this.contentChangeJavaSource = FileUtil.readFileAsString(contentChangeJavaFile);
         }
 
         if (out == null) {
@@ -92,6 +102,14 @@ public class MainArgs {
 
     public void setOutFile(File outFile) {
         this.outFile = outFile;
+    }
+
+    public void setContentChangeJavaSource(String contentChangeJavaSource) {
+        this.contentChangeJavaSource = contentChangeJavaSource;
+    }
+
+    public String getContentChangeJavaSource() {
+        return contentChangeJavaSource;
     }
 
     public void setPretty(boolean pretty) {

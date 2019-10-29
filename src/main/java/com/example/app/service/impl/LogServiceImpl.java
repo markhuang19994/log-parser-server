@@ -95,8 +95,17 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void generateLogByConditionMethod(String[] args) throws Exception {
-        List<LogDetail> logDetails = methodInstructService.execInstruct(this.currentLogDetails, args);
+    public void generateLogByFilterMethod(String[] args) throws Exception {
+        List<LogDetail> logDetails = methodInstructService.execFilterInstruct(this.currentLogDetails, args);
+        String logStr = logFormatService.generateFormatLogStr(logDetails);
+        writeLog(logStr);
+        currentLogDetails = logDetails;
+        logHistoryService.writeHistory(currentLogDetails);
+    }
+
+    @Override
+    public void generateLogByChangeContentMethod(String[] args) throws Exception {
+        List<LogDetail> logDetails = methodInstructService.execContentChangeInstruct(this.currentLogDetails, args);
         String logStr = logFormatService.generateFormatLogStr(logDetails);
         writeLog(logStr);
         currentLogDetails = logDetails;

@@ -1,6 +1,7 @@
 package com.example.app.service;
 
 import com.example.app.condition.LogCondition;
+import com.example.app.content.LogContentChanger;
 
 /**
  * @author MarkHuang
@@ -9,8 +10,10 @@ import com.example.app.condition.LogCondition;
  * </ul>
  * @since 10/26/19
  */
-public interface LogConditionService {
+public interface MethodService {
     LogCondition generateLogConditionClass(String conditionJavaSource) throws Exception;
 
     LogCondition generateLogConditionClassAndMethod(String conditionJavaSource, String method) throws Exception;
+
+    LogContentChanger generateContentChangeMethodClass(String javaSource) throws Exception;
 }

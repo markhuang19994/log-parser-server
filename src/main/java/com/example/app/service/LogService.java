@@ -12,7 +12,9 @@ import java.io.IOException;
 public interface LogService {
     void init() throws Exception;
 
-    void generateLogByConditionMethod(String[] args) throws Exception;
+    void generateLogByFilterMethod(String[] args) throws Exception;
+
+    void generateLogByChangeContentMethod(String[] args) throws Exception;
 
     String setFormat(String[] args) throws IOException;
 

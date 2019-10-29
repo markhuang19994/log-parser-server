@@ -42,8 +42,10 @@ function execInstruct() {
     IFS= read -erp "lvadmin@${state}>> " args_arr
     if [[ "${args_arr}" == exit ]]; then
       exit 0
-    elif [[ "${args_arr}" == method ]]; then
-      change_state "${state}" 'method'
+    elif [[ "${args_arr}" == cmethod ]]; then
+      change_state "${state}" 'cmethod'
+    elif [[ "${args_arr}" == fmethod ]]; then
+      change_state "${state}" 'fmethod'
     elif [[ "${args_arr}" == life ]]; then
       change_state "${state}" 'life'
     elif [[ "${args_arr}" == format ]]; then

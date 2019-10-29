@@ -74,7 +74,7 @@ public class Cache<K, V> {
             );
         }
         this.delayQueue.put(delayItem);
-        LOGGER.debug("put item in cache, key:{}, expire time:{}min", key, TimeUnit.MINUTES.convert(timeout, timeUnit));
+//        LOGGER.debug("put item in cache, key:{}, expire time:{}min", key, TimeUnit.MINUTES.convert(timeout, timeUnit));
     }
 
     public V get(K key) {

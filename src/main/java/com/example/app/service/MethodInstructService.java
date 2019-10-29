@@ -12,5 +12,7 @@ import java.util.List;
  * @since 10/28/19
  */
 public interface MethodInstructService {
-    List<LogDetail> execInstruct(List<LogDetail> logDetails, String[] instructArgs) throws Exception;
+    List<LogDetail> execFilterInstruct(List<LogDetail> logDetails, String[] instructArgs) throws Exception;
+
+    List<LogDetail> execContentChangeInstruct(List<LogDetail> logDetails, String[] instructArgs) throws Exception;
 }

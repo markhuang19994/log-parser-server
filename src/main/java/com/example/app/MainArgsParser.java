@@ -36,10 +36,17 @@ public class MainArgsParser {
                 .getActionByFlags(ActionAnalysis.flags("-resultStructure", "-rs"))
                 .orElse(null);
 
-        String condition = actionAnalysis
+        String conditionJavaSourcePath = actionAnalysis
                 .getActionByFlags(ActionAnalysis.flags("-condition", "-c"))
                 .orElseGet(() -> {
                     errorMessageList.add("-condition not found");
+                    return null;
+                });
+
+        String contentJavaSourcePath = actionAnalysis
+                .getActionByFlags(ActionAnalysis.flags("-content", "-ct"))
+                .orElseGet(() -> {
+                    errorMessageList.add("-content not found");
                     return null;
                 });
 
@@ -51,6 +58,6 @@ public class MainArgsParser {
             throw new RuntimeException("\n" + String.join("\n", errorMessageList));
         }
 
-        return new MainArgs(log, structure, resultStructure, condition, out);
+        return new MainArgs(log, structure, resultStructure, conditionJavaSourcePath, contentJavaSourcePath, out);
     }
 }

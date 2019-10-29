@@ -1,5 +1,3 @@
-package com.example.app.condition;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,8 +5,7 @@ import java.util.Map;
 
 public class LogConditionDemo extends LogCondition {
     public boolean exec(Map<String, String> attrMap) throws Exception {
-//        return attrMap.get("aId").equals("d0dfd");
-        return findByDate(attrMap.get("time"), "20191018183806", "20191018183809");
+        return ${auto};
     }
 
     public boolean findByDate(String timeStr, String startStr, String endStr) throws ParseException {

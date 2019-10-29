@@ -63,7 +63,7 @@ public final class ReflectUtil {
             throw new IllegalArgumentException(cls.getSimpleName() + " Method not found:" + methodName);
         }
 
-        Object result = method.invoke(instance, args);
+        Object result = method.invoke(instance, args.toArray());
         if (key != null) {
             cache.put(key, method, 1, TimeUnit.DAYS);
         }

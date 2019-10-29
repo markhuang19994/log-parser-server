@@ -2,13 +2,14 @@ package com.example.app.service.impl;
 
 import com.example.app.MainArgs;
 import com.example.app.condition.LogCondition;
+import com.example.app.content.LogContentChanger;
 import com.example.app.model.LogDetail;
 import com.example.app.service.ArgumentService;
-import com.example.app.service.LogConditionService;
+import com.example.app.service.MethodService;
 import com.example.app.service.MethodInstructService;
+import com.example.app.util.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,31 +30,31 @@ public class MethodInstructServiceImpl implements MethodInstructService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodInstructServiceImpl.class);
 
     private final MainArgs mainArgs;
-    private final LogConditionService conditionService;
-    @Autowired
-    private ArgumentService argumentService;
+    private final MethodService methodService;
+    private final ArgumentService argumentService;
 
 
-    public MethodInstructServiceImpl(LogConditionService conditionService, MainArgs mainArgs) {
-        this.conditionService = conditionService;
+    public MethodInstructServiceImpl(MethodService methodService, MainArgs mainArgs, ArgumentService argumentService) {
+        this.methodService = methodService;
         this.mainArgs = mainArgs;
+        this.argumentService = argumentService;
     }
 
     @Override
-    public List<LogDetail> execInstruct(List<LogDetail> logDetails, String[] instructArgs) throws Exception {
+    public List<LogDetail> execFilterInstruct(List<LogDetail> logDetails, String[] instructArgs) throws Exception {
         List<MethodInstruct> instructList = parseMethodExecInstruct(instructArgs);
         List<LogDetail> result = new ArrayList<>(logDetails);
         for (MethodInstruct instruct : instructList) {
             String methodStr = instruct.getMethodStr();
             LOGGER.debug("Exec method Instruct >>> {}", methodStr);
-            LogCondition logCondition = conditionService
+            LogCondition logCondition = methodService
                     .generateLogConditionClassAndMethod(mainArgs.getConditionJavaSource(), methodStr);
-            result = filterByLogCondition(result, logCondition);
+            result = filterLogByCondition(result, logCondition);
         }
         return result;
     }
 
-    private List<LogDetail> filterByLogCondition(List<LogDetail> logDetails, LogCondition logCondition) {
+    private List<LogDetail> filterLogByCondition(List<LogDetail> logDetails, LogCondition logCondition) {
         List<LogDetail> result = new ArrayList<>();
         for (LogDetail logDetail : logDetails) {
             Map<String, String> attr = logDetail.getAttr();
@@ -62,6 +63,36 @@ public class MethodInstructServiceImpl implements MethodInstructService {
                 if (logCondition.exec()) {
                     result.add(logDetail);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<LogDetail> execContentChangeInstruct(List<LogDetail> logDetails, String[] instructArgs) throws Exception {
+        List<MethodInstruct> instructList = parseMethodExecInstruct(instructArgs);
+        List<LogDetail> result = new ArrayList<>(logDetails);
+        for (MethodInstruct instruct : instructList) {
+            String methodStr = instruct.getMethodStr();
+            LOGGER.debug("Exec method Instruct >>> {}", methodStr);
+            LogContentChanger logContentChanger = methodService
+                    .generateContentChangeMethodClass(mainArgs.getContentChangeJavaSource());
+            result = changeLogContent(result, logContentChanger, instruct.getMethod());
+        }
+        return result;
+    }
+
+    private List<LogDetail> changeLogContent(
+            List<LogDetail> logDetails, LogContentChanger logContentChanger, Method method) {
+        List<LogDetail> result = new ArrayList<>();
+        for (LogDetail logDetail : logDetails) {
+            Map<String, String> attr = logDetail.getAttr();
+            try {
+                logContentChanger.setAttrMap(attr);
+                ReflectUtil.executeMethodWithStringArgs(logContentChanger, method.name, method.args);
+                result.add(logDetail);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -93,6 +124,20 @@ public class MethodInstructServiceImpl implements MethodInstructService {
             }
             method.append(")");
             return method.toString();
+        }
+
+        private Method getMethod() {
+            return new Method(parts.get(0), parts.subList(1, parts.size()));
+        }
+    }
+
+    private static class Method {
+        private String name;
+        private List<String> args;
+
+        private Method(String name, List<String> args) {
+            this.name = name;
+            this.args = args;
         }
     }
 }

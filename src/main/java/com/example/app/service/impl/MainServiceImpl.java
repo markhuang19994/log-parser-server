@@ -46,13 +46,15 @@ public class MainServiceImpl implements MainService {
         String logPath = prop.getProperty("log.path");
         String outPath = prop.getProperty("log.out.path");
         String logStructure = prop.getProperty("log.structure");
-        String logCondition = prop.getProperty("log.condition");
+        String logCondition = prop.getProperty("log.condition.java");
+        String logContent = prop.getProperty("log.content.java");
 
         MainArgs mainArgs = MainArgsParser.parseMainArgs(new String[]{
                 "-l", logPath,
                 "-o", outPath,
                 "-s", logStructure,
-                "-c", logCondition
+                "-c", logCondition,
+                "-ct", logContent
         });
 
         MainArgs mainArgsBean = ctx.getBean(MainArgs.class);
@@ -61,13 +63,15 @@ public class MainServiceImpl implements MainService {
         mainArgsBean.setLogStructure(mainArgs.getLogStructure());
         mainArgsBean.setResultLogStructure(mainArgs.getResultLogStructure());
         mainArgsBean.setConditionJavaSource(mainArgs.getConditionJavaSource());
+        mainArgsBean.setContentChangeJavaSource(mainArgs.getContentChangeJavaSource());
 
         runMain(mainArgs);
         return String.format(
-                "LogFile:%s\nLogStructure:%s\nResultLogStructure:%s\nConditionFile:%s\nOutFile:%s",
+                "LogFile:%s\nLogStructure:%s\nResultLogStructure:%s\nConditionFile:%s\nContentChangeFile:%s\nOutFile:%s",
                 mainArgsBean.getLogFile().getAbsolutePath(),
                 mainArgsBean.getLogStructure(),
                 mainArgsBean.getResultLogStructure(),
+                logContent,
                 logCondition,
                 mainArgsBean.getOutFile().getAbsolutePath()
         );

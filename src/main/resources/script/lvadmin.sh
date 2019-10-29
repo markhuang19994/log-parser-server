@@ -21,7 +21,8 @@ main() {
 }
 
 function start_server() {
-  echo 'server start'
+  mvn -f /home/markhuag/Documents/project/source/Citi/log-parser-server/pom.xml spring-boot:run > /dev/null &
+  echo 'server started...'
 }
 
 function setMainArgs() {

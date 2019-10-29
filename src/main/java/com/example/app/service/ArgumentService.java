@@ -1,5 +1,7 @@
 package com.example.app.service;
 
+import java.util.List;
+
 /**
  * @author MarkHuang
  * @version <ul>
@@ -9,4 +11,6 @@ package com.example.app.service;
  */
 public interface ArgumentService {
     String[] parseArgumentStr(String str);
+
+    List<String[]> splitArgs(String[] args, String s);
 }

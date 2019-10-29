@@ -18,8 +18,10 @@ public class MainArgs {
     private File logFile;
     private String logStructure;
     private String resultLogStructure;
+    private String oriResultLogStructure;
     private String conditionJavaSource;
     private File outFile;
+    private boolean isPretty = false;
 
     public MainArgs() {
     }
@@ -33,7 +35,7 @@ public class MainArgs {
         this.logFile = logFile;
         this.logStructure = logStructure;
         this.resultLogStructure = resultLogStructure == null ? logStructure : resultLogStructure;
-
+        this.oriResultLogStructure = resultLogStructure;
         File conditionJavaFile = new File(conditionJavaPath);
         if (!conditionJavaFile.exists()) {
             this.conditionJavaSource = FileUtil.readFileAsString(new ClassPathResource("condition/LogConditionDemo.java").getFile());
@@ -90,6 +92,19 @@ public class MainArgs {
 
     public void setOutFile(File outFile) {
         this.outFile = outFile;
+    }
+
+    public void setPretty(boolean pretty) {
+        isPretty = pretty;
+    }
+
+    public boolean isPretty() {
+        return isPretty;
+    }
+
+    public String resetResultLogStructure() {
+        this.resultLogStructure = oriResultLogStructure;
+        return this.resultLogStructure;
     }
 
 }

@@ -2,12 +2,13 @@ package com.example.app.handler;
 
 import com.example.app.handler.annon.IgnoreException;
 import com.example.app.service.ArgumentService;
-import com.example.app.service.impl.LogServiceImpl;
+import com.example.app.service.LogService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 /**
  * @author MarkHuang
@@ -19,12 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @IgnoreException
 public class InstructHandler {
-    private final LogServiceImpl logService;
+    private final LogService logService;
     private final ArgumentService argumentService;
 
-    private ObjectMapper om = new ObjectMapper();
-
-    public InstructHandler(LogServiceImpl logService, ArgumentService argumentService) {
+    public InstructHandler(LogService logService, ArgumentService argumentService) {
         this.logService = logService;
         this.argumentService = argumentService;
     }
@@ -50,6 +49,13 @@ public class InstructHandler {
             logService.recoverHistory(Integer.parseInt(args[1]));
         }
         return "";
+    }
+
+    @PostMapping("/exec/instruct/format")
+    public String format(HttpServletRequest request) throws IOException {
+        String data = request.getParameter("data");
+        String[] args = argumentService.parseArgumentStr(data);
+        return logService.setFormat(args);
     }
 
 }

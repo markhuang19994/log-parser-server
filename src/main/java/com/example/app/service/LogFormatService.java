@@ -12,5 +12,7 @@ import java.util.List;
  * @since 10/26/19
  */
 public interface LogFormatService {
+    String generateFormatLogStr(List<LogDetail> logDetails);
+
     List<LogDetail> prettyFormat(List<LogDetail> logDetailList);
 }

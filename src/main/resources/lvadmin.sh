@@ -46,6 +46,8 @@ function execInstruct() {
       change_state "${state}" 'method'
     elif [[ "${args_arr}" == life ]]; then
       change_state "${state}" 'life'
+    elif [[ "${args_arr}" == format ]]; then
+      change_state "${state}" 'format'
     else
       history -s "$args_arr"
       send_post "${BASE_URL}/exec/instruct/${state}" "${args_arr}"

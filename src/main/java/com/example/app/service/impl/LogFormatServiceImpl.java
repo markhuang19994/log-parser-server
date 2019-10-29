@@ -1,9 +1,11 @@
 package com.example.app.service.impl;
 
+import com.example.app.MainArgs;
 import com.example.app.model.LogDetail;
 import com.example.app.service.LogFormatService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +21,38 @@ import java.util.stream.Stream;
  */
 @Service
 public class LogFormatServiceImpl implements LogFormatService {
+
+    private final MainArgs mainArgs;
+
+    public LogFormatServiceImpl(MainArgs mainArgs) {
+        this.mainArgs = mainArgs;
+    }
+
+    @Override
+    public String generateFormatLogStr(List<LogDetail> logDetails) {
+        List<LogDetail> logDetailList = logDetails
+                .parallelStream()
+                .map(LogDetail::clone)
+                .collect(Collectors.toList());
+        if (mainArgs.isPretty()) {
+            logDetailList = prettyFormat(logDetailList);
+        }
+        StringBuilder sb = new StringBuilder();
+        for (LogDetail logDetail : logDetailList) {
+            sb.append(generateLogBlock(logDetail));
+        }
+        return sb.toString();
+    }
+
+    private String generateLogBlock(LogDetail logDetail) {
+        String result = mainArgs.getResultLogStructure();
+        Map<String, String> attr = logDetail.getAttr();
+        for (Map.Entry<String, String> entry : attr.entrySet()) {
+            result = result.replace("%" + entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
+
     @Override
     public List<LogDetail> prettyFormat(List<LogDetail> logDetailList) {
         Stream<LogDetail> stream = logDetailList.stream();

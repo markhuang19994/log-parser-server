@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author MarkHuang
  * @version <ul>
- *  <li>10/28/19, MarkHuang,new
+ * <li>10/28/19, MarkHuang,new
  * </ul>
  * @since 10/28/19
  */
@@ -89,5 +89,27 @@ public class ArgumentServiceImpl implements ArgumentService {
             args.add(temp.toString());
         }
         return args.toArray(new String[]{});
+    }
+
+    @Override
+    public List<String[]> splitArgs(String[] args, String s) {
+        List<String[]> result = new ArrayList<>();
+        List<String> parts = new ArrayList<>();
+        if (s== null){
+            result.add(args);
+            return result;
+        }
+        for (String arg : args) {
+            if (s.equals(arg)) {
+                result.add(parts.toArray(new String[]{}));
+                parts = new ArrayList<>();
+                continue;
+            }
+            parts.add(arg);
+        }
+        if (parts.size() > 0) {
+            result.add(parts.toArray(new String[]{}));
+        }
+        return result;
     }
 }

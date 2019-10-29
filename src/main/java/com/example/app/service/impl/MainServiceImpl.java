@@ -3,8 +3,6 @@ package com.example.app.service.impl;
 import com.example.app.MainArgs;
 import com.example.app.MainArgsParser;
 import com.example.app.service.MainService;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,6 @@ public class MainServiceImpl implements MainService {
 
     private final ApplicationContext ctx;
     private final LogServiceImpl logService;
-    private ObjectMapper om = new ObjectMapper();
 
     public MainServiceImpl(ApplicationContext ctx, LogServiceImpl logService) {
         this.ctx = ctx;

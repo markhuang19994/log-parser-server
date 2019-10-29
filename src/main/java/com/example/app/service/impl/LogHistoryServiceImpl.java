@@ -28,7 +28,7 @@ public class LogHistoryServiceImpl implements LogHistoryService {
     private ObjectMapper om = new ObjectMapper();
 
     public LogHistoryServiceImpl() {
-        historyDir = FileUtil.newRandomTempDir();
+        historyDir = FileUtil.newRandomTempDir("log_history");
         historyDir.deleteOnExit();
     }
 

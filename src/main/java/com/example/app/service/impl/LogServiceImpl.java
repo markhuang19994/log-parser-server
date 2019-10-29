@@ -3,12 +3,18 @@ package com.example.app.service.impl;
 import com.example.app.MainArgs;
 import com.example.app.model.LogDetail;
 import com.example.app.service.*;
+import com.example.app.util.EncryptUtil;
 import com.example.app.util.FileUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,26 +34,64 @@ public class LogServiceImpl implements LogService {
     private final ArgumentService argumentService;
     private final LogHistoryService logHistoryService;
     private final MethodInstructService methodInstructService;
+    private final Environment env;
     private List<LogDetail> currentLogDetails;
 
 
     public LogServiceImpl(
             MainArgs mainArgs, LogFormatService logFormatService,
             LogHistoryService logHistoryService, MethodInstructService methodInstructService,
-            ArgumentService argumentService) {
+            ArgumentService argumentService, Environment env) {
         this.mainArgs = mainArgs;
         this.logFormatService = logFormatService;
         this.logHistoryService = logHistoryService;
         this.methodInstructService = methodInstructService;
         this.argumentService = argumentService;
+        this.env = env;
     }
 
     @Override
     public void init() throws Exception {
         String log = FileUtil.readFileAsString(mainArgs.getLogFile());
-        ParseLogService parseLogService = ParseLogServiceImpl.newInstance(log, mainArgs.getLogStructure());
-        this.currentLogDetails = parseLogService.parseLog();
+        this.currentLogDetails = getInitLogInCacheDir(log);
+        if (this.currentLogDetails == null) {
+            ParseLogService parseLogService = ParseLogServiceImpl.newInstance(log, mainArgs.getLogStructure());
+            this.currentLogDetails = parseLogService.parseLog();
+        } else {
+            LOGGER.debug("Init log detail from cache");
+        }
+
         logHistoryService.writeHistory(this.currentLogDetails);
+        cacheInitLog(log, this.currentLogDetails);
+    }
+
+    private void cacheInitLog(String log, List<LogDetail> logDetails) {
+        try {
+            String key = getInitLogCacheKey(log);
+            String cacheDir = env.getProperty("init.cache.dir");
+            FileUtil.writeGZipFile(new File(cacheDir, key), new ObjectMapper().writeValueAsString(logDetails));
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    private List<LogDetail> getInitLogInCacheDir(String log) {
+        try {
+            String key = getInitLogCacheKey(log);
+            String cacheDir = env.getProperty("init.cache.dir");
+            File f = new File(cacheDir, key);
+            if (!f.exists()) return null;
+            String logDetailJson = FileUtil.readGzipFileAsString(f);
+            return new ObjectMapper().readValue(logDetailJson, new TypeReference<List<LogDetail>>() {
+            });
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return null;
+    }
+
+    private String getInitLogCacheKey(String log) throws NoSuchAlgorithmException {
+        return EncryptUtil.encryptMd5(String.format("%s%s", log, mainArgs.getLogStructure())) + ".init.gz";
     }
 
     @Override

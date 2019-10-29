@@ -2,6 +2,7 @@ package com.example.server;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 /**
  * @author MarkHuang
@@ -12,5 +13,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan("com.example")
+@PropertySource("classpath:config.properties")
 public class SpringConfigure {
 }

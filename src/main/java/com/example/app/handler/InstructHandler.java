@@ -29,9 +29,6 @@ public class InstructHandler {
 
     @PostMapping("/exec/instruct/fmethod")
     public String fmethod(HttpServletRequest request) throws Exception {
-        //todo group by method
-        //todo change content method
-        //todo use reflection instead of compile new class
         String data = request.getParameter("data");
         String[] args = argumentService.parseArgumentStr(data);
         logService.generateLogByFilterMethod(args);

@@ -10,8 +10,6 @@ public class LogParserServerApplication {
         //todo group by method
         //todo change content method
         //todo use reflection instead of compile new class
-        //todo optimise public List<LogDetail> parseLog()
-        //todo optimise private String generateLogBlock(LogDetail logDetail)
         SpringApplication.run(LogParserServerApplication.class, args);
     }
 

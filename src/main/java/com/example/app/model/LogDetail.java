@@ -21,7 +21,7 @@ public class LogDetail implements Cloneable{
         this.attr = new LinkedHashMap<>(attr);
     }
 
-    public Map<String, String> getAttr() {
+    public Map<String, String> getAttributeMap() {
         return attr;
     }
 

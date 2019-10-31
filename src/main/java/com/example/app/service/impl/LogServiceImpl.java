@@ -56,7 +56,8 @@ public class LogServiceImpl implements LogService {
         this.currentLogDetails = getInitLogInCacheDir(log);
         if (this.currentLogDetails == null) {
             ParseLogService parseLogService = ParseLogServiceImpl.newInstance(log, mainArgs.getLogStructure());
-            this.currentLogDetails = parseLogService.parseLog();
+            List<String> logList = parseLogService.readLog(null);
+            this.currentLogDetails = parseLogService.parseLog(logList);
         } else {
             LOGGER.debug("Init log detail from cache");
         }

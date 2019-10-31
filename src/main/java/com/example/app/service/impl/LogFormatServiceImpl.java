@@ -5,7 +5,6 @@ import com.example.app.model.LogDetail;
 import com.example.app.service.LogFormatService;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -46,7 +45,7 @@ public class LogFormatServiceImpl implements LogFormatService {
 
     private String generateLogBlock(LogDetail logDetail) {
         String result = mainArgs.getResultLogStructure();
-        Map<String, String> attr = logDetail.getAttr();
+        Map<String, String> attr = logDetail.getAttributeMap();
         for (Map.Entry<String, String> entry : attr.entrySet()) {
             result = result.replace("%" + entry.getKey(), entry.getValue());
         }
@@ -61,7 +60,7 @@ public class LogFormatServiceImpl implements LogFormatService {
         }
         Map<String, Integer> longVal = getMaxAttrLengthMap(logDetailList);
         return stream.peek(logDetail -> {
-            Map<String, String> attr = logDetail.getAttr();
+            Map<String, String> attr = logDetail.getAttributeMap();
             for (Map.Entry<String, String> entry : attr.entrySet()) {
                 String key = entry.getKey();
                 if (key.equals("content")) continue;
@@ -79,7 +78,7 @@ public class LogFormatServiceImpl implements LogFormatService {
             stream = stream.parallel();
         }
         stream.forEach(logDetail -> {
-            Map<String, String> attr = logDetail.getAttr();
+            Map<String, String> attr = logDetail.getAttributeMap();
             for (Map.Entry<String, String> entry : attr.entrySet()) {
                 String key = entry.getKey();
                 if (key.equals("content")) continue;

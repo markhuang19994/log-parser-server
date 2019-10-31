@@ -16,5 +16,7 @@ public interface ParseLogService {
 
     String getLogStructure();
 
-    List<LogDetail> parseLog();
+    List<String> readLog(String logLinePrefix);
+
+    List<LogDetail> parseLog(List<String> logList);
 }

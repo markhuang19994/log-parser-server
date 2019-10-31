@@ -57,7 +57,7 @@ public class MethodInstructServiceImpl implements MethodInstructService {
     private List<LogDetail> filterLogByCondition(List<LogDetail> logDetails, LogCondition logCondition) {
         List<LogDetail> result = new ArrayList<>();
         for (LogDetail logDetail : logDetails) {
-            Map<String, String> attr = logDetail.getAttr();
+            Map<String, String> attr = logDetail.getAttributeMap();
             try {
                 logCondition.setAttrMap(attr);
                 if (logCondition.exec()) {
@@ -88,7 +88,7 @@ public class MethodInstructServiceImpl implements MethodInstructService {
             List<LogDetail> logDetails, LogContentChanger logContentChanger, Method method) {
         List<LogDetail> result = new ArrayList<>();
         for (LogDetail logDetail : logDetails) {
-            Map<String, String> attr = logDetail.getAttr();
+            Map<String, String> attr = logDetail.getAttributeMap();
             try {
                 logContentChanger.setAttrMap(attr);
                 ReflectUtil.executeMethodWithStringArgs(logContentChanger, method.name, method.args);

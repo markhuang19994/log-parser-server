@@ -114,6 +114,15 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
+    public void generateLogByGlobalMethod(String[] args) throws Exception {
+        List<LogDetail> logDetails = methodInstructService.execGlobalInstruct(this.currentLogDetails, args);
+        String logStr = logFormatService.generateFormatLogStr(logDetails);
+        writeLog(logStr);
+        currentLogDetails = logDetails;
+        logHistoryService.writeHistory(currentLogDetails);
+    }
+
+    @Override
     public String setFormat(String[] args) throws IOException {
         List<String> messages = new ArrayList<>();
         List<String[]> pipeArgsList = argumentService.splitArgs(args, "|");

@@ -43,6 +43,14 @@ public class InstructHandler {
         return "";
     }
 
+    @PostMapping("/exec/instruct/gmethod")
+    public String gmethod(HttpServletRequest request) throws Exception {
+        String data = request.getParameter("data");
+        String[] args = argumentService.parseArgumentStr(data);
+        logService.generateLogByGlobalMethod(args);
+        return "";
+    }
+
     @PostMapping("/exec/instruct/life")
     public String life(HttpServletRequest request) throws Exception {
         String data = request.getParameter("data");

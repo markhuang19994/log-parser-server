@@ -1,8 +1,9 @@
 package com.example.app.service.impl;
 
 import com.example.app.MainArgs;
-import com.example.app.condition.LogCondition;
-import com.example.app.content.LogContentChanger;
+import com.example.app.method.condition.LogCondition;
+import com.example.app.method.content.LogContentChanger;
+import com.example.app.method.custom.GlobalLogMethod;
 import com.example.app.model.LogDetail;
 import com.example.app.service.ArgumentService;
 import com.example.app.service.MethodService;
@@ -48,7 +49,7 @@ public class MethodInstructServiceImpl implements MethodInstructService {
             String methodStr = instruct.getMethodStr();
             LOGGER.debug("Exec method Instruct >>> {}", methodStr);
             LogCondition logCondition = methodService
-                    .generateLogConditionClassAndMethod(mainArgs.getConditionJavaSource(), methodStr);
+                    .getLogConditionInstance(mainArgs.getConditionJavaSource(), methodStr);
             result = filterLogByCondition(result, logCondition);
         }
         return result;
@@ -78,7 +79,7 @@ public class MethodInstructServiceImpl implements MethodInstructService {
             String methodStr = instruct.getMethodStr();
             LOGGER.debug("Exec method Instruct >>> {}", methodStr);
             LogContentChanger logContentChanger = methodService
-                    .generateContentChangeMethodClass(mainArgs.getContentChangeJavaSource());
+                    .getContentChangeMethodInstance(mainArgs.getContentChangeJavaSource());
             result = changeLogContent(result, logContentChanger, instruct.getMethod());
         }
         return result;
@@ -93,6 +94,25 @@ public class MethodInstructServiceImpl implements MethodInstructService {
                 logContentChanger.setAttrMap(attr);
                 ReflectUtil.executeMethodWithStringArgs(logContentChanger, method.name, method.args);
                 result.add(logDetail);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<LogDetail> execGlobalInstruct(List<LogDetail> logDetails, String[] instructArgs) throws Exception {
+        List<MethodInstruct> instructList = parseMethodExecInstruct(instructArgs);
+        List<LogDetail> result = new ArrayList<>(logDetails);
+        for (MethodInstruct instruct : instructList) {
+            String methodStr = instruct.getMethodStr();
+            LOGGER.debug("Exec method Instruct >>> {}", methodStr);
+            GlobalLogMethod globalLogMethod = methodService.getGlobalMethodInstance(methodStr);
+            try {
+                globalLogMethod.setLogDetailList(logDetails);
+                Method method = instruct.getMethod();
+                result = globalLogMethod.exec();
             } catch (Exception e) {
                 e.printStackTrace();
             }

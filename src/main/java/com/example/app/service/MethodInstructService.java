@@ -15,4 +15,6 @@ public interface MethodInstructService {
     List<LogDetail> execFilterInstruct(List<LogDetail> logDetails, String[] instructArgs) throws Exception;
 
     List<LogDetail> execContentChangeInstruct(List<LogDetail> logDetails, String[] instructArgs) throws Exception;
+
+    List<LogDetail> execGlobalInstruct(List<LogDetail> logDetails, String[] instructArgs) throws Exception;
 }

@@ -5,8 +5,7 @@ import com.example.app.model.LogDetail;
 import com.example.app.service.LogFormatService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -91,6 +90,4 @@ public class LogFormatServiceImpl implements LogFormatService {
         });
         return maxLengthMap;
     }
-
-
 }

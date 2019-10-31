@@ -16,6 +16,8 @@ public interface LogService {
 
     void generateLogByChangeContentMethod(String[] args) throws Exception;
 
+    void generateLogByGlobalMethod(String[] args) throws Exception;
+
     String setFormat(String[] args) throws IOException;
 
     void recoverHistory(int index) throws Exception;

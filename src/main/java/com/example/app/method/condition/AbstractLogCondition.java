@@ -1,4 +1,4 @@
-package com.example.app.condition;
+package com.example.app.method.condition;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

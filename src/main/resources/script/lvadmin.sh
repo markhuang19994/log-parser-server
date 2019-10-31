@@ -21,7 +21,7 @@ main() {
 }
 
 function start_server() {
-  mvn -f /home/markhuag/Documents/project/source/Citi/log-parser-server/pom.xml spring-boot:run > /dev/null &
+  #  mvn -f /home/markhuag/Documents/project/source/Citi/log-parser-server/pom.xml spring-boot:run > /dev/null &
   echo 'server started...'
 }
 
@@ -47,6 +47,8 @@ function execInstruct() {
       change_state "${state}" 'cmethod'
     elif [[ "${args_arr}" == fmethod ]]; then
       change_state "${state}" 'fmethod'
+    elif [[ "${args_arr}" == gmethod ]]; then
+      change_state "${state}" 'gmethod'
     elif [[ "${args_arr}" == life ]]; then
       change_state "${state}" 'life'
     elif [[ "${args_arr}" == format ]]; then

@@ -1,0 +1,19 @@
+2019-10-30 13:53:06,944 [WebContainer : 4] [0v-GNp2IgZGa5p5Hto_XGiav-mIrGkSIr9uCoKyMyiUnf41vmD1XwN1utuT-OaaX] | ------ | /basehandler/recoverSSGSession | CapHandlerServlet            [TRACE] Request Data: {}
+2019-10-30 13:53:06,944 [WebContainer : 3] [0v-GNp2IgZGa5p5Hto_XGiav-mIrGkSIr9uCoKyMyiUnf41vmD1XwN1utuT-OaaX] | ------ | /basehandler/recoverSSGSession | CapHandlerServlet            [TRACE] Request Action: recoverSSGSession , Action from: https://uat.newwebatm.citibank.com.tw/extfunc05/pclcustomercheckhandler/SSO
+2019-10-30 13:53:06,167 [WebContainer : 15] [ySjmgyc5hN09OaDHgz43cNY7UDiuIx9LIQPlhYVhDlJsTMIN_NY3mmtlZrmO6UWj] | ------ | /pclstep2handler/loadExpressData | WebSrvServiceImpl            [DEBUG] [ Web Service HC ]getCustomerData ReturnCode = >>> 0
+2019-10-30 13:53:06,944 [WebContainer : 4] [0v-GNp2IgZGa5p5Hto_XGiav-mIrGkSIr9uCoKyMyiUnf41vmD1XwN1utuT-OaaX] | ------ | /basehandler/recoverSSGSession | CapHandlerServlet            [TRACE] Request System: Mozilla/5.0 (Linux; Android 9; HTC_U-3u Build/PQ2A.190205.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/78.0.3904.62 Mobile Safari/537.36
+2019-10-30 13:53:06,944 [WebContainer : 4] [0v-GNp2IgZGa5p5Hto_XGiav-mIrGkSIr9uCoKyMyiUnf41vmD1XwN1utuT-OaaX] | ------ | /basehandler/recoverSSGSession | CapHandlerServlet            [TRACE] Request custId: V113862235
+2019-10-30 13:53:06,960 [WebContainer : 4] [0v-GNp2IgZGa5p5Hto_XGiav-mIrGkSIr9uCoKyMyiUnf41vmD1XwN1utuT-OaaX] | ------ | /basehandler/recoverSSGSession | CapHandlerServlet            [INFO ] plugin:basehandler - PCLBaseHandler action:recoverSSGSession
+2019-10-30 13:53:06,960 [WebContainer : 4] [0v-GNp2IgZGa5p5Hto_XGiav-mIrGkSIr9uCoKyMyiUnf41vmD1XwN1utuT-OaaX] | ------ | /basehandler/recoverSSGSession | SQL                          [DEBUG]
+    select
+        ccsysparm0_.parmId as parmId2_0_,
+        ccsysparm0_.parmDesc as parmDesc2_0_,
+        ccsysparm0_.parmValue as parmValue2_0_,
+        ccsysparm0_.updateTime as updateTime2_0_,
+        ccsysparm0_.updater as updater2_0_
+    from
+        dbo.CO_PCL_CFG_SYSPARM4 ccsysparm0_
+    where
+        ccsysparm0_.parmId=?
+2019-10-30 14:41:48,573 [pool-18-thread-1] [j00G2_6L8Txa1QzBRIvsx0jOXxFQ3ltRFyhPtjmXnKDoeMkahCxvUI8yyaAefFBl] | ------ | /basehandler/sendToKafka | HttpConnectionHelper         [DEBUG] Connection to https://apacctltwuat145:9443/extfunc36/eventhubPublish?eventData=%7B%22Event%22%3A%7B%22EventID%22%3A%22PCLPagelevel%22%2C%22BizFunctionID%22%3A%22PCLPagelevel%22%2C%22FunctionID%22%3A%22PCLPagelevel%22%2C%22PageName%22%3A%22Step2%22%2C%22CustomerID%22%3A%22NA%22%2C%22CustomerSegment%22%3A%22H%22%2C%22CardNumber%22%3A%225520009399911404%22%2C%22TransactionStatus%22%3A%22Success%22%2C%22RespStatusCode%22%3A%22NA%22%2C%22RespStatusMsg%22%3A%22NA%22%2C%22ServerDateTime%22%3A%222019-10-303T02%3A41%3A46.046%2B0800%22%2C%22SysType%22%3A%22PCL%22%2C%22Amount%22%3A%22NA%22%2C%22Tenor%22%3A%22NA%22%7D%7D...
+2019-10-30 14:41:57,168 [WebContainer : 15] [ySjmgyc5hN09OaDHgz43cNY7UDiuIx9LIQPlhYVhDlJsTMIN_NY3mmtlZrmO6UWj] | ------ | /pclstep2handler/loadExpressData | WebSrvServiceImpl            [INFO ] [GetCustomerData retry =>>>1] {}

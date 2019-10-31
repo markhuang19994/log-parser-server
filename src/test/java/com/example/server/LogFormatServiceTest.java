@@ -5,9 +5,12 @@ import com.example.app.model.LogDetail;
 import com.example.app.service.ParseLogService;
 import com.example.app.service.impl.LogFormatServiceImpl;
 import com.example.app.service.impl.ParseLogServiceImpl;
+import com.example.app.util.FileUtil;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -20,15 +23,21 @@ import java.util.List;
  * @since 10/31/19
  */
 public class LogFormatServiceTest {
-
-    private static String log = "2019-10-30 13:53:06,288 [WebContainer : 4] [] | ------ |  | PCLCustomerCheckHandler      [DEBUG] receiveTokenResult:{\"receiveData>>\":\"2019-10-30 13:53:06>>\\r\\n\"}";
+    private static String log;
     private static List<String> logBlocks;
     private static ParseLogService service;
     private static MainArgs mainArgs;
 
     static {
+        try {
+            log = FileUtil.readFileAsString(new ClassPathResource("/log/format_test.log").getFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         mainArgs = new MainArgs();
-        mainArgs.setResultLogStructure("%time [%thread] [%sessionId] | %x | %requestPath | %className [%logStatus] %content");
+        String s = "%time [%thread] [%sessionId] | %x | %requestPath | %className [%logStatus] %content";
+        mainArgs.setLogStructure(s);
+        mainArgs.setResultLogStructure(s);
         service = ParseLogServiceImpl.newInstance(log, mainArgs.getLogStructure());
         logBlocks = service.readLog(null);
     }
@@ -40,9 +49,17 @@ public class LogFormatServiceTest {
     @Test
     void generateLogBlock() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         LogFormatServiceImpl service = new LogFormatServiceImpl(mainArgs);
-        Method read = service.getClass().getDeclaredMethod("generateLogBlock", LogDetail.class);
-        read.setAccessible(true);
-        Object invoke = read.invoke(service, getLogDetailList().get(0));
+        Method generateLogBlock = service.getClass().getDeclaredMethod("generateLogBlock", LogDetail.class);
+        generateLogBlock.setAccessible(true);
+        Object invoke = generateLogBlock.invoke(service, getLogDetailList().get(0));
         Assert.isTrue(invoke.equals(log));
     }
+
+//    @Test
+//    void groupBy() {
+//        LogFormatServiceImpl service = new LogFormatServiceImpl(mainArgs);
+//        List<LogDetail> logDetails = service.groupBy(getLogDetailList(), new String[]{"sessionId", "thread"});
+//        String s = service.generateFormatLogStr(logDetails);
+//        System.out.println(s);
+//    }
 }

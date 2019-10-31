@@ -73,7 +73,8 @@ public class ParseLogServiceImpl implements ParseLogService {
         return attrNames;
     }
 
-    private List<String> readLog(String logLinePrefix) {
+    @Override
+    public List<String> readLog(String logLinePrefix) {
         String[] lines = log.split("\n|\r\n");
         List<String> result = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
@@ -104,7 +105,7 @@ public class ParseLogServiceImpl implements ParseLogService {
      *
      * @return log blocks List
      */
-    private boolean prefixMatcher(String logLine, String prefix){
+    private boolean prefixMatcher(String logLine, String prefix) {
         return prefix == null
                 ? defaultPrefixMatcher(logLine)
                 : customPrefixMatcher(logLine, prefix);
@@ -147,8 +148,7 @@ public class ParseLogServiceImpl implements ParseLogService {
     }
 
     @Override
-    public List<LogDetail> parseLog() {
-        List<String> logList = readLog(null);
+    public List<LogDetail> parseLog(List<String> logList) {
         int size = logList.size();
         Stream<String> stream = size > 80000 ? logList.parallelStream() : logList.stream();
         String patternStr = getAttrPattern();
@@ -156,8 +156,7 @@ public class ParseLogServiceImpl implements ParseLogService {
                 .map(log -> {
                     Pattern pattern = Pattern.compile(patternStr);
                     Matcher matcher = pattern.matcher(log);
-                    boolean isFind = matcher.find();
-                    if (isFind) {
+                    if (matcher.find()) {
                         try {
                             LogDetail logDetail = new LogDetail();
                             for (int i = 1; i <= attrNames.size(); i++) {
@@ -176,7 +175,7 @@ public class ParseLogServiceImpl implements ParseLogService {
 
     private String getAttrPattern() {
         String pattern = RegexUtil.escapeRegexSpecialChar(logStructure);
-        pattern = pattern.replaceAll(" ", "[ \t]+");
+//        pattern = pattern.replaceAll(" ", "[ \t]+");
         for (String attrName : attrNames) {
             String key = "%" + attrName;
             if (attrName.equalsIgnoreCase("time")) {

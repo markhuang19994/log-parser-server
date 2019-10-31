@@ -15,14 +15,14 @@ import java.util.List;
 
 public class ParseLogServiceTest {
 
-    private static String log = "";
-    private static final int ANS_LOG_BLOCK_SIZE = 35305;
+    static String log = "";
+    private static final int ANS_LOG_BLOCK_SIZE = 353050;
 
     static {
         try {
             File f = new ClassPathResource("log/CLM_WebLog_RCE2.log.1").getFile();
             StringBuilder logB = new StringBuilder();
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 10; i++) {
                 logB.append(new String(Files.readAllBytes(f.toPath())));
             }
             log = logB.toString();
@@ -32,27 +32,31 @@ public class ParseLogServiceTest {
     }
 
     @Test
-    public void readLog1() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    void readLog1() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         ParseLogService service = ParseLogServiceImpl.newInstance(log, "%time");
         Method read = service.getClass().getDeclaredMethod("readLog", String.class);
         read.setAccessible(true);
         long l = System.currentTimeMillis();
         Object invoke = read.invoke(service, "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3})");
-        System.out.println("Use time:" + (System.currentTimeMillis() - l) + "ms");
+        long useTime = System.currentTimeMillis() - l;
+        System.out.println("Use time:" + useTime + "ms");
 
+        Assert.isTrue(useTime < 2000, "method perform is too slow");
         Assert.isInstanceOf(List.class, invoke);
         Assert.isTrue(((List) invoke).size() == ANS_LOG_BLOCK_SIZE, () -> "Log block size not correct");
     }
 
     @Test
-    public void readLog2() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    void readLog2() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         ParseLogService service = ParseLogServiceImpl.newInstance(log, "%time");
         Method read = service.getClass().getDeclaredMethod("readLog", String.class);
         read.setAccessible(true);
         long l = System.currentTimeMillis();
         Object invoke = read.invoke(service, new Object[]{ null });
-        System.out.println("Use time:" + (System.currentTimeMillis() - l) + "ms");
+        long useTime = System.currentTimeMillis() - l;
+        System.out.println("Use time:" + useTime + "ms");
 
+        Assert.isTrue(useTime < 2000, "method perform is too slow");
         Assert.isInstanceOf(List.class, invoke);
         Assert.isTrue(((List) invoke).size() == ANS_LOG_BLOCK_SIZE, () -> "Log block size not correct");
     }

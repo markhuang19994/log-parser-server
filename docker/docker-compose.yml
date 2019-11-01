@@ -1,0 +1,9 @@
+version: "3"
+services:
+  log_server:
+    build: .
+    volumes:
+      - ./data:/var/opt/data
+      - ./server_log:/usr/local/project/log-parser-server/log
+    ports:
+      - "17778:17778"

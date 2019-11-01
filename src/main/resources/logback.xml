@@ -15,7 +15,7 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>${user.dir}/myLog.log</file>
+        <file>${user.dir}/log/myLog.log</file>
         <encoder>
             <pattern>${PATTERN}</pattern>
             <charset>${CHARSET}</charset>

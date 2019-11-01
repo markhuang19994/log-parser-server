@@ -21,7 +21,7 @@ main() {
 }
 
 function start_server() {
-  #  mvn -f /home/markhuag/Documents/project/source/Citi/log-parser-server/pom.xml spring-boot:run > /dev/null &
+  mvn  spring-boot:run > /dev/null &
   echo 'server started...'
 }
 
@@ -93,7 +93,6 @@ function send_post() {
     printf "\nCurl error, Code: %s\n" "${exitCode}"
     echo url:"${url}"
     echo data:"${data}"
-    #    echo detail:"${http_detail}"
   fi
 
   printf '\n'

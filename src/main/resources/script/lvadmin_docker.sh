@@ -21,7 +21,6 @@ main() {
 }
 
 function start_server() {
-  mvn  spring-boot:run > /dev/null &
   echo 'server started...'
 }
 

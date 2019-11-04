@@ -43,6 +43,8 @@ function execInstruct() {
     IFS= read -erp "lvadmin@${state}>> " args_arr
     if [[ "${args_arr}" == exit ]]; then
       exit 0
+    elif [[ "${args_arr}" == default ]]; then
+      change_state "${state}" 'default'
     elif [[ "${args_arr}" == cmethod ]]; then
       change_state "${state}" 'cmethod'
     elif [[ "${args_arr}" == fmethod ]]; then
@@ -84,8 +86,8 @@ function send_post() {
   data=$2
 
   curl --fail --request POST -sL \
-    --url "${url}" \
-    --data-urlencode "data=${data}"
+  --url "${url}" \
+  --data-urlencode "data=${data}"
   exitCode=$?
 
   #After curl send post request

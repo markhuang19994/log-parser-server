@@ -4,6 +4,7 @@ services:
     build: .
     volumes:
       - ./data:/data
+      - ./history/lvadmin:/root/lvadmin/history
       - ./server_log:/usr/local/project/log-parser-server/log
     ports:
       - "17778:17778"

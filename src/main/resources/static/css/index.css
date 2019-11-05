@@ -1,0 +1,56 @@
+.log-container {
+    padding: 16px;
+    overflow: auto;
+    height: calc(100% - 32px);
+}
+
+.log-block {
+    white-space: nowrap;
+    line-height: 110%;
+}
+
+.log-attr {
+    margin-left: 8px;
+}
+
+.log-attr:first-child {
+    margin-left: 0;
+}
+
+.log.bg-color-1 {
+    background-color: rgb(183, 255, 153);
+}
+
+.log.bg-color-2 {
+    background-color: rgb(153, 255, 255);
+}
+
+.log.bg-color-3 {
+    background-color: rgb(247, 179, 185);
+}
+
+.log.bg-color-4 {
+    background-color: rgb(202, 212, 255);
+}
+
+.log.bg-color-5 {
+    background-color: rgb(248, 255, 202);
+}
+
+div.log.demo {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    margin-left: 12px;
+}
+
+div.log.demo:hover {
+    filter: brightness(.9);
+}
+
+input[name='action'] {
+    width: 90%;
+    height: 50px;
+    font-size: 32px;
+    padding: 8px;
+}

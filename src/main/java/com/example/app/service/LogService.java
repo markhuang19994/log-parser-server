@@ -1,6 +1,9 @@
 package com.example.app.service;
 
+import com.example.app.model.LogDetail;
+
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author MarkHuang
@@ -21,4 +24,6 @@ public interface LogService {
     String setFormat(String[] args) throws IOException;
 
     void recoverHistory(int index) throws Exception;
+
+    List<LogDetail> getCurrentLogDetails();
 }

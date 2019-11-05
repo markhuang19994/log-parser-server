@@ -175,7 +175,7 @@ public class ParseLogServiceImpl implements ParseLogService {
 
     private String getAttrPattern() {
         String pattern = RegexUtil.escapeRegexSpecialChar(logStructure);
-//        pattern = pattern.replaceAll(" ", "[ \t]+");
+        pattern = pattern.replaceAll("[ ]+", "[ \t]+");
         for (String attrName : attrNames) {
             String key = "%" + attrName;
             if (attrName.equalsIgnoreCase("time")) {

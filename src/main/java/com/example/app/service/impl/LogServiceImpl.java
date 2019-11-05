@@ -163,4 +163,8 @@ public class LogServiceImpl implements LogService {
         FileUtil.writeFile(mainArgs.getOutFile(), logStr);
     }
 
+    @Override
+    public List<LogDetail> getCurrentLogDetails() {
+        return currentLogDetails;
+    }
 }

@@ -1,51 +1,68 @@
 $(function () {
-    function fillLogContainer(logAttrList) {
-        const logContainer = document.getElementsByClassName('log-container')[0];
-        logContainer.innerHTML = '';
-        logAttrList.forEach(attr => {
-            const logBlock = document.createElement('div');
-            logBlock.classList.add('log-block');
-            for (let key of Object.keys(attr)) {
-                const pre = document.createElement('pre');
-                pre.classList.add(key);
-                pre.classList.add('log-attr');
-                pre.classList.add('inline');
-                const attrVal = attr[key];
-                if (key === 'time') {
-                    pre.innerText = attrVal;
-                } else if (key === 'content') {
-                    const idx = attrVal.indexOf('\n');
-                    if (idx !== -1) {
-                        const firstLine = attrVal.substr(0, idx);
-                        const otherLine = attrVal.substr(idx + 1);
-                        pre.innerText = firstLine;
-                        pre.appendChild(document.createElement('br'));
-                        const contentPre = document.createElement('pre');
-                        contentPre.innerText = otherLine;
-                        pre.appendChild(contentPre);
-                    } else {
-                        pre.innerText = attrVal;
-                    }
-                } else {
-                    pre.innerText = `[${attrVal}]`;
-                }
-                logBlock.appendChild(pre);
-            }
-            logContainer.appendChild(logBlock);
-        })
-    }
 
-    function getCurrentLogDetails(callback) {
-        $.ajax({
-            url: '/get/current-log-details',
-            method: 'POST',
-            success: d => callback(d),
-            error: e => console.error(e)
-        });
+    class LogContainer {
+        start = 0;
+        end = 0;
+        limit = 0;
+        logContainer;
+
+        constructor(logContainer) {
+            this.logContainer = logContainer;
+        }
+
+        fillLogContainer(logDetails) {
+            const logAttrList = logDetails.map(x => x['attributeMap']);
+            const logContainer = this.logContainer;
+            logContainer.innerHTML = '';
+            logAttrList.forEach(attr => {
+                const logBlock = document.createElement('div');
+                logBlock.classList.add('log-block');
+                for (let key of Object.keys(attr)) {
+                    const pre = document.createElement('pre');
+                    pre.classList.add(key);
+                    pre.classList.add('log-attr');
+                    pre.classList.add('inline');
+                    const attrVal = attr[key];
+                    if (key === 'time') {
+                        pre.innerText = attrVal;
+                    } else if (key === 'content') {
+                        const idx = attrVal.indexOf('\n');
+                        if (idx !== -1) {
+                            const firstLine = attrVal.substr(0, idx);
+                            const otherLine = attrVal.substr(idx + 1);
+                            pre.innerText = firstLine;
+                            pre.appendChild(document.createElement('br'));
+                            const contentPre = document.createElement('pre');
+                            contentPre.innerText = otherLine;
+                            pre.appendChild(contentPre);
+                        } else {
+                            pre.innerText = attrVal;
+                        }
+                    } else {
+                        pre.innerText = `[${attrVal}]`;
+                    }
+                    logBlock.appendChild(pre);
+                }
+                logContainer.appendChild(logBlock);
+            })
+        }
+
+        getCurrentLogDetails() {
+            return new Promise((res, rej) => {
+                $.ajax({
+                    url: '/get/current-log-details',
+                    method: 'POST',
+                    success: d => res(d),
+                    error: e => rej(e)
+                });
+            })
+        }
     }
 
     class MainConfig {
-        constructor() {
+        logContainer;
+        constructor(logContainer) {
+            this.logContainer = logContainer;
             $(document).on('click', 'button[name="main-config-btn"]', () => {
                 closePopup();
                 startLoading('Loading...');
@@ -54,9 +71,10 @@ $(function () {
                     url: '/set/main_args',
                     method: 'POST',
                     data: {data: val},
-                    success: d => {
+                    success: async d => {
                         console.log(d);
-                        getCurrentLogDetails(d => fillLogContainer(d.map(x => x['attributeMap'])));
+                        const res = await this.logContainer.getCurrentLogDetails();
+                        this.logContainer.fillLogContainer(res['logDetails']);
                     },
                     error: e => console.error(e),
                 }).done(() => endLoading());
@@ -94,7 +112,9 @@ $(function () {
     }
 
     class ActionExecutor {
-        constructor() {
+        logContainer;
+        constructor(logContainer) {
+            this.logContainer = logContainer;
             setControlShiftKeyFunction('A', () => {
                 const ipt = '<input name="action"/>';
                 showPopupHtml('<span>Action: </span>' + ipt);
@@ -125,9 +145,10 @@ $(function () {
                 url: '/exec/instruct/' + action,
                 method: 'POST',
                 data: {data: params},
-                success: d => {
+                success: async d => {
                     console.log(d);
-                    getCurrentLogDetails(d => fillLogContainer(d.map(x => x['attributeMap'])));
+                    const res = await this.logContainer.getCurrentLogDetails();
+                    this.logContainer.fillLogContainer(res['logDetails']);
                 },
                 error: e => console.error(e)
             });
@@ -171,12 +192,14 @@ $(function () {
     }
 
     (function main() {
-        const mainConfig = new MainConfig();
+        const logContainer = new LogContainer(document.getElementsByClassName('log-container')[0]);
+        const mainConfig = new MainConfig(logContainer);
         mainConfig.init();
         setControlShiftKeyFunction('R', () => mainConfig.init());
 
-        new ActionExecutor();
+        new ActionExecutor(logContainer);
         new Heilight();
+
     })();
 
 });

@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,12 +76,27 @@ public class BaseHandler {
     public ResponseEntity<?> getCurrentLogDetails(HttpServletRequest request) {
         String p = env.getProperty("browser-log-detail-limit");
         int limit = Integer.parseInt(p == null ? "5000" : p);
+        String startStr = request.getParameter("start");
+        String endStr = request.getParameter("end");
+
         List<LogDetail> currentLogDetails = logService.getCurrentLogDetailsWithFormat();
-        return ResponseEntity.ok(
-                currentLogDetails.size() > limit
-                        ? currentLogDetails.subList(0, limit)
-                        : currentLogDetails
-        );
+
+        int start = startStr == null ? 0 : Integer.parseInt(startStr);
+        int end = endStr == null ? start + limit : Integer.parseInt(endStr);
+        end = Math.min(end, Math.min(start + limit, currentLogDetails.size()));
+
+        List<LogDetail> logDetails = currentLogDetails.subList(start, end);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("logDetails", logDetails);
+        result.put("start", start);
+        result.put("end", end);
+        result.put("limit", limit);
+        return ResponseEntity.ok(result);
     }
 
+    @PostMapping("/get/current-log-details-size")
+    public ResponseEntity<?> getCurrentLogDetailsSize(HttpServletRequest request) {
+        List<LogDetail> currentLogDetails = logService.getCurrentLogDetailsWithFormat();
+        return ResponseEntity.ok(Collections.singletonMap("size", currentLogDetails.size()));
+    }
 }

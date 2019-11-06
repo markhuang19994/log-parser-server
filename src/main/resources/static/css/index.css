@@ -1,12 +1,13 @@
 .log-container {
     padding: 16px;
-    overflow: auto;
+    overflow: visible;
     height: calc(100% - 32px);
 }
 
 .log-container pre {
     font-family: 'Roboto Mono', monospace;
     font-size: 12px;
+    font-weight: normal !important;
 }
 
 .log-container .inline {

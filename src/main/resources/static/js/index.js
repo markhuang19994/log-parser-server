@@ -111,7 +111,7 @@ $(function () {
                 const action = val.substr(0, actionIdx).trim().toLocaleLowerCase();
                 const params = val.substr(actionIdx + 1);
 
-                if (['fmethod', 'cmethod', 'life', 'format'].includes(action)) {
+                if (['fmethod', 'cmethod', 'gmethod', 'life', 'format'].includes(action)) {
                     closePopup();
                     this.execAction(action, params);
                 } else {

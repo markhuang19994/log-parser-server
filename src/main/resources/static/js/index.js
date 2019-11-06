@@ -6,28 +6,30 @@ $(function () {
             const logBlock = document.createElement('div');
             logBlock.classList.add('log-block');
             for (let key of Object.keys(attr)) {
-                const span = document.createElement('span');
-                span.classList.add(key);
-                span.classList.add('log-attr');
+                const pre = document.createElement('pre');
+                pre.classList.add(key);
+                pre.classList.add('log-attr');
+                pre.classList.add('inline');
+                const attrVal = attr[key];
                 if (key === 'time') {
-                    span.innerText = attr[key];
+                    pre.innerText = attrVal;
                 } else if (key === 'content') {
-                    const idx = attr[key].indexOf('\n');
+                    const idx = attrVal.indexOf('\n');
                     if (idx !== -1) {
-                        const firstLine = attr[key].substr(0, idx);
-                        const otherLine = attr[key].substr(idx + 1);
-                        span.innerText = firstLine;
-                        span.appendChild(document.createElement('br'));
-                        const pre = document.createElement('pre');
-                        pre.innerText = otherLine;
-                        span.appendChild(pre);
+                        const firstLine = attrVal.substr(0, idx);
+                        const otherLine = attrVal.substr(idx + 1);
+                        pre.innerText = firstLine;
+                        pre.appendChild(document.createElement('br'));
+                        const contentPre = document.createElement('pre');
+                        contentPre.innerText = otherLine;
+                        pre.appendChild(contentPre);
                     } else {
-                        span.innerText = attr[key];
+                        pre.innerText = attrVal;
                     }
                 } else {
-                    span.innerText = `[${attr[key]}]`;
+                    pre.innerText = `[${attrVal}]`;
                 }
-                logBlock.appendChild(span);
+                logBlock.appendChild(pre);
             }
             logContainer.appendChild(logBlock);
         })
@@ -44,7 +46,7 @@ $(function () {
 
     class MainConfig {
         constructor() {
-            $(document).on('click', 'button[name="main-config-btn"]', e => {
+            $(document).on('click', 'button[name="main-config-btn"]', () => {
                 closePopup();
                 startLoading('Loading...');
                 const val = document.querySelector('select[name="main-config"]').value;
@@ -139,7 +141,7 @@ $(function () {
             setControlKeyFunction('H', () => {
                 const heightLightStr = window.getSelection().toString();
                 const hash = heightLightStr.hashCode();
-                heightLightStrMap[hash] = heightLightStr;
+                this.heightLightStrMap[hash] = heightLightStr;
 
                 const divs = new Array(5).fill('').map((x, i) => {
                     return `<div class="log demo bg-color-${i + 1}" data-hash='${hash}' data-color='${i + 1}'></div>`;
@@ -154,7 +156,7 @@ $(function () {
                 const hash = e.currentTarget.dataset['hash'];
                 const bgColor = e.currentTarget.dataset['color'] || 1;
                 if (!hash) return false;
-                this.heightLightWord(heightLightStrMap[hash], bgColor);
+                this.heightLightWord(this.heightLightStrMap[hash], bgColor);
                 delete this.heightLightStrMap[hash];
                 closePopup();
             });

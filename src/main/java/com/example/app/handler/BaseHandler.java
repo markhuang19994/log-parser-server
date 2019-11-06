@@ -75,7 +75,7 @@ public class BaseHandler {
     public ResponseEntity<?> getCurrentLogDetails(HttpServletRequest request) {
         String p = env.getProperty("browser-log-detail-limit");
         int limit = Integer.parseInt(p == null ? "5000" : p);
-        List<LogDetail> currentLogDetails = logService.getCurrentLogDetails();
+        List<LogDetail> currentLogDetails = logService.getCurrentLogDetailsWithFormat();
         return ResponseEntity.ok(
                 currentLogDetails.size() > limit
                         ? currentLogDetails.subList(0, limit)

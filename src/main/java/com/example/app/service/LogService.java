@@ -26,4 +26,6 @@ public interface LogService {
     void recoverHistory(int index) throws Exception;
 
     List<LogDetail> getCurrentLogDetails();
+
+    List<LogDetail> getCurrentLogDetailsWithFormat();
 }

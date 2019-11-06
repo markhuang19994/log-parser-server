@@ -167,4 +167,12 @@ public class LogServiceImpl implements LogService {
     public List<LogDetail> getCurrentLogDetails() {
         return currentLogDetails;
     }
+
+    @Override
+    public List<LogDetail> getCurrentLogDetailsWithFormat() {
+        if (mainArgs.isPretty()) {
+            return logFormatService.prettyFormat(currentLogDetails);
+        }
+        return currentLogDetails;
+    }
 }

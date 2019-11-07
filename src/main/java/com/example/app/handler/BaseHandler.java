@@ -82,10 +82,10 @@ public class BaseHandler {
         List<LogDetail> currentLogDetails = logService.getCurrentLogDetailsWithFormat();
 
         int start = "".equals(startStr) ? 0 : Integer.parseInt(startStr);
-        int end = "".equals(endStr) ? start + limit : Integer.parseInt(endStr);
+        int end = "".equals(endStr) ? start + limit : Integer.parseInt(endStr) + 1;
         end = Math.min(end, Math.min(start + limit, currentLogDetails.size()));
 
-        List<LogDetail> logDetails = currentLogDetails.subList(start, end + 1);
+        List<LogDetail> logDetails = currentLogDetails.subList(start, end);
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("logDetails", logDetails);
         result.put("start", start);

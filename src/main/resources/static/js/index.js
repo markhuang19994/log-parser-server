@@ -4,10 +4,39 @@ $(function () {
         start = 0;
         end = 0;
         limit = 0;
+        total = 0;
         logContainer;
 
         constructor(logContainer) {
             this.logContainer = logContainer;
+            setControlShiftKeyFunction('P', () => {
+                showPopupHtml(`
+                    <div class="start-end">
+                        顯示第<input name="log-start" value="${this.start}"/>筆
+                        至第<input name="log-end" value="${this.end}"/>筆
+                    </div>
+                    <div>
+                        最多顯示${this.limit}筆，共計${this.total}筆 
+                        <button name="log-contain-change">確認</button>
+                    </div>
+                `);
+                $(document).on('click', 'button[name="log-contain-change"]', async e => {
+                    const startVal = document.querySelector('input[name="log-start"]').value;
+                    const endVal = document.querySelector('input[name="log-end"]').value;
+                    if (startVal === '' || endVal === '') return false;
+
+                    const start = ~~startVal;
+                    const end = ~~endVal;
+                    if (isNaN(start) || isNaN(end)) return false;
+                    closePopup();
+                    this.updateLogContainer(start, end)
+                });
+            });
+        }
+
+        async updateLogContainer(start, end) {
+            const logDetails = await this.getCurrentLogDetails(start, end);
+            this.fillLogContainer(logDetails);
         }
 
         fillLogContainer(logDetails) {
@@ -47,12 +76,19 @@ $(function () {
             })
         }
 
-        getCurrentLogDetails() {
+        getCurrentLogDetails(start = null, end = null) {
             return new Promise((res, rej) => {
                 $.ajax({
                     url: '/get/current-log-details',
                     method: 'POST',
-                    success: d => res(d),
+                    data: {start, end},
+                    success: d => {
+                        this.start = d.start;
+                        this.end = d.end;
+                        this.limit = d.limit;
+                        this.total = d.total;
+                        res(d['logDetails'])
+                    },
                     error: e => rej(e)
                 });
             })
@@ -61,6 +97,7 @@ $(function () {
 
     class MainConfig {
         logContainer;
+
         constructor(logContainer) {
             this.logContainer = logContainer;
             $(document).on('click', 'button[name="main-config-btn"]', () => {
@@ -73,8 +110,8 @@ $(function () {
                     data: {data: val},
                     success: async d => {
                         console.log(d);
-                        const res = await this.logContainer.getCurrentLogDetails();
-                        this.logContainer.fillLogContainer(res['logDetails']);
+                        const logDetails = await this.logContainer.getCurrentLogDetails();
+                        this.logContainer.fillLogContainer(logDetails);
                     },
                     error: e => console.error(e),
                 }).done(() => endLoading());
@@ -113,6 +150,7 @@ $(function () {
 
     class ActionExecutor {
         logContainer;
+
         constructor(logContainer) {
             this.logContainer = logContainer;
             setControlShiftKeyFunction('A', () => {
@@ -147,8 +185,8 @@ $(function () {
                 data: {data: params},
                 success: async d => {
                     console.log(d);
-                    const res = await this.logContainer.getCurrentLogDetails();
-                    this.logContainer.fillLogContainer(res['logDetails']);
+                    const logDetails = await this.logContainer.getCurrentLogDetails();
+                    this.logContainer.fillLogContainer(logDetails);
                 },
                 error: e => console.error(e)
             });

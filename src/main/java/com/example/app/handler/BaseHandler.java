@@ -81,16 +81,17 @@ public class BaseHandler {
 
         List<LogDetail> currentLogDetails = logService.getCurrentLogDetailsWithFormat();
 
-        int start = startStr == null ? 0 : Integer.parseInt(startStr);
-        int end = endStr == null ? start + limit : Integer.parseInt(endStr);
+        int start = "".equals(startStr) ? 0 : Integer.parseInt(startStr);
+        int end = "".equals(endStr) ? start + limit : Integer.parseInt(endStr);
         end = Math.min(end, Math.min(start + limit, currentLogDetails.size()));
 
-        List<LogDetail> logDetails = currentLogDetails.subList(start, end);
+        List<LogDetail> logDetails = currentLogDetails.subList(start, end + 1);
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("logDetails", logDetails);
         result.put("start", start);
         result.put("end", end);
         result.put("limit", limit);
+        result.put("total", currentLogDetails.size());
         return ResponseEntity.ok(result);
     }
 
